@@ -1,3 +1,8 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { supabase } from "@/lib/supabaseClient"
+
 const projects = [
   {
     name: "Hey Voter",
@@ -26,6 +31,40 @@ const projects = [
 ]
 
 export default function Home() {
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null)
+      setLoading(false)
+})
+
+  }, [])
+
+  if (loading) return <p>Loading…</p>
+
+  if (!user) {
+    if (typeof window !== "undefined") {
+      window.location.href = "/login"
+    }
+    return null
+  }
+  
+    const ALLOWED_EMAILS = [
+    "jaybalmer@gmail.com",
+    "damien@quaestus.vc",
+    "ysimkin@aflatminor.com",
+  ]
+
+  if (!ALLOWED_EMAILS.includes(user.email)) {
+    supabase.auth.signOut()
+    if (typeof window !== "undefined") {
+      window.location.href = "/login"
+    }
+    return null
+  }
+
   return (
     <main style={{ padding: "32px", maxWidth: "900px", margin: "0 auto" }}>
       <h1>Three Dog Tech</h1>
