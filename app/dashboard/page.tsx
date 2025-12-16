@@ -1,19 +1,36 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
 
-export default function Home() {
+export default function Dashboard() {
+  const router = useRouter()
+
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [projects, setProjects] = useState<any[]>([])
 
   useEffect(() => {
+    let mounted = true
+
     supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null)
+      if (!mounted) return
+
+      const sessionUser = data.session?.user ?? null
+      setUser(sessionUser)
       setLoading(false)
-})
-  }, [])
+
+      if (!sessionUser) {
+        router.replace("/login")
+      }
+    })
+
+    return () => {
+      mounted = false
+    }
+  }, [router])
+
 
  useEffect(() => {
   if (!user) return
