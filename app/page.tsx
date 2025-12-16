@@ -37,10 +37,10 @@ export default function Home() {
 
       <table width="100%" cellPadding={8}>
         <thead>
-          <tr align="left">
-            <th>Project</th>
-            <th>Domain</th>
-            <th>Status</th>
+          <tr>
+            <th style={{ textAlign: "left" }}>Project</th>
+            <th style={{ textAlign: "left" }}>Domain</th>
+            <th style={{ textAlign: "left" }}>Status</th>
           </tr>
         </thead>
         <tbody>
