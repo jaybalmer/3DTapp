@@ -93,7 +93,7 @@ return (
     {project.folder && (
       <section style={{ marginTop: 24, marginBottom: 32 }}>
         <h2 style={{ fontSize: 16, marginBottom: 8 }}>
-          project links
+          Documents
         </h2>
 
         <ul>
@@ -109,16 +109,9 @@ return (
         </ul>
       </section>
     )}
-
 {project.documents && project.documents.length > 0 && (
   <>
-
-
     <section>
-      <h2 style={{ fontSize: 16, marginBottom: 12 }}>
-        key documents
-      </h2>
-
       {project.documents.map((doc) => {
         const previewable = canPreview(doc.url)
         const previewUrl = getPreviewUrl(doc.url)
@@ -164,7 +157,7 @@ return (
 
     {/* Footer */}
     <footer style={{ marginTop: 40 }}>
-      <a href="/">← Back to dashboard</a>
+      <a href="/dashboard">← Back to dashboard</a>
     </footer>
   </main>
 )
