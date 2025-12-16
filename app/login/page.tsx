@@ -1,43 +1,82 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
 
-export default function LoginPage() {
+export default function Login() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
   const [email, setEmail] = useState("")
   const [sent, setSent] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
-  const signIn = async () => {
-    setError(null)
-    const { error } = await supabase.auth.signInWithOtp({ email })
-    if (error) setError(error.message)
-    else setSent(true)
+  useEffect(() => {
+    let mounted = true
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return
+
+      const sessionUser = data.session?.user ?? null
+      setUser(sessionUser)
+      setLoading(false)
+
+      if (sessionUser) {
+        router.replace("/dashboard")
+      }
+    })
+
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault()
+
+  await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: `${window.location.origin}/dashboard`,
+    },
+  })
+
+  setSent(true)
+}
+
+
+    return () => {
+      mounted = false
+    }
+  }, [router])
+
+const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`,
+      },
+    })
+
+    setSent(true)
   }
 
+  if (loading) return <p>Loading…</p>
+
   return (
-    <main style={{ padding: 32, maxWidth: 420, margin: "0 auto" }}>
-      <h1>Sign in</h1>
-
+    <main>
       {sent ? (
-        <p>Check your email for the login link.</p>
-      ) : (
-        <>
-          <input
-            type="email"
-            placeholder="you@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{ width: "100%", padding: 8, marginBottom: 12 }}
-          />
-          <button onClick={signIn}><p style={{ fontSize: 14, color: "#666" }}>
-  Access is by invitation only.
-</p>
-</button>
+  <p>Check your email for the magic link.</p>
+) : (
+  <form onSubmit={handleLogin}>
+    <input
+      type="email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      placeholder="you@example.com"
+      required
+    />
+    <button type="submit">Send magic link</button>
+  </form>
+)}
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
-        </>
-      )}
     </main>
   )
 }
