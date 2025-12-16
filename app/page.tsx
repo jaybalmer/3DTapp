@@ -1,21 +1,25 @@
 const projects = [
   {
     name: "Hey Voter",
+    slug: "hey-voter",
     status: "Exploration",
     domain: "Participation Infrastructure",
   },
   {
     name: "Global Fans Engine",
+    slug: "global-fans-engine",
     status: "Exploration",
     domain: "Fan Engagement",
   },
   {
     name: "Nature Token Bank",
+    slug: "nature-token-bank",
     status: "Concept",
     domain: "Environmental Value Chains",
   },
   {
     name: "Stock AVP",
+    slug: "stock-avp",
     status: "Exploration",
     domain: "Tokenized Project Financing",
   },
@@ -41,8 +45,10 @@ export default function Home() {
         </thead>
         <tbody>
           {projects.map((project) => (
-            <tr key={project.name}>
-              <td>{project.name}</td>
+            <tr key={project.slug}>
+              <td>
+                <a href={`/projects/${project.slug}`}>{project.name}</a>
+              </td>
               <td>{project.domain}</td>
               <td>{project.status}</td>
             </tr>
