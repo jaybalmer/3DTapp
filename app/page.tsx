@@ -59,9 +59,10 @@ export default function Home() {
       <table width="100%" cellPadding={8}>
         <thead>
           <tr>
-            <th style={{ textAlign: "left" }}>Name</th>
-            <th style={{ textAlign: "left" }}>Summary</th>
-            <th style={{ textAlign: "left" }}>Status</th>
+            <th style={{ textAlign: "left" }}>project</th>
+            <th style={{ textAlign: "left" }}></th>
+            <th style={{ textAlign: "left" }}>stage</th>
+            <th style={{ textAlign: "left" }}>rank</th>
           </tr>
         </thead>
         <tbody>
@@ -72,6 +73,7 @@ export default function Home() {
               </td>
               <td>{project.status}</td>
               <td>{project.domain}</td>
+              <td>{project.description}</td>
             </tr>
           ))}
         </tbody>
