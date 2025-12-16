@@ -34,7 +34,7 @@ export default async function ProjectPage({
       {project.folder_url && (
         <p style={{ marginTop: 16 }}>
           <a href={project.folder_url} target="_blank" rel="noreferrer">
-            Open project folder
+            Open Project Folder
           </a>
         </p>
       )}
