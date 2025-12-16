@@ -2,45 +2,27 @@
 
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
-
-const projects = [
-  {
-    name: "Hey Voter",
-    slug: "hey-voter",
-    status: "Exploration",
-    domain: "Participation Infrastructure",
-  },
-  {
-    name: "Global Fans Engine",
-    slug: "global-fans-engine",
-    status: "Exploration",
-    domain: "Fan Engagement",
-  },
-  {
-    name: "Nature Token Bank",
-    slug: "nature-token-bank",
-    status: "Concept",
-    domain: "Environmental Value Chains",
-  },
-  {
-    name: "Stock AVP",
-    slug: "stock-avp",
-    status: "Exploration",
-    domain: "Tokenized Project Financing",
-  },
-]
+import { getProjects } from "@/lib/projects"
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
+  const [projects, setProjects] = useState<any[]>([])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user ?? null)
       setLoading(false)
 })
-
   }, [])
+
+  useEffect(() => {
+  if (!user) return
+
+  getProjects()
+    .then(setProjects)
+    .catch(console.error)
+}, [user])
 
   if (loading) return <p>Loading…</p>
 
@@ -77,19 +59,19 @@ export default function Home() {
       <table width="100%" cellPadding={8}>
         <thead>
           <tr>
-            <th style={{ textAlign: "left" }}>Project</th>
-            <th style={{ textAlign: "left" }}>Domain</th>
+            <th style={{ textAlign: "left" }}>Name</th>
+            <th style={{ textAlign: "left" }}>Summary</th>
             <th style={{ textAlign: "left" }}>Status</th>
           </tr>
         </thead>
         <tbody>
           {projects.map((project) => (
-            <tr key={project.slug}>
+            <tr key={`${project.slug}-${project.name}`}>
               <td>
                 <a href={`/projects/${project.slug}`}>{project.name}</a>
               </td>
-              <td>{project.domain}</td>
               <td>{project.status}</td>
+              <td>{project.domain}</td>
             </tr>
           ))}
         </tbody>
