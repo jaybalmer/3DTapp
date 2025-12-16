@@ -1,10 +1,11 @@
 export type Project = {
   slug: string
   name: string
+  summary: string
   status: string
-  domain: string
-  description: string
+  ranking: string
   folder_url: string
+  comments: string
 }
 
 export async function getProjects(): Promise<Project[]> {
@@ -26,10 +27,11 @@ export async function getProjects(): Promise<Project[]> {
     const [
       slug,
       name,
+      summary,
       status,
-      domain,
-      description,
+      ranking,
       folder_url,
+      comments,
     ] = row.split(",")
 
     return {
@@ -40,10 +42,11 @@ export async function getProjects(): Promise<Project[]> {
   .replace(/\r/g, ""),
 
       name: name?.trim(),
+      summary: summary?.trim(),
       status: status?.trim(),
-      domain: domain?.trim(),
-      description: description?.trim(),
+      ranking: ranking?.trim(),
       folder_url: folder_url?.trim(),
+      comments: comments?.trim(),
     }
   })
 }

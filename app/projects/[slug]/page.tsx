@@ -21,27 +21,95 @@ export default async function ProjectPage({
     )
   }
 
-  return (
-    <main style={{ padding: 32, maxWidth: 800, margin: "0 auto" }}>
-      <h1>{project.name}</h1>
+return (
+  <main style={{ padding: 32, maxWidth: 800, margin: "0 auto" }}>
+    {/* Header */}
+<header style={{ marginBottom: 24 }}>
+  <h1 style={{ marginBottom: 12 }}>
+    {project.name}
+  </h1>
 
-      <p style={{ color: "#666", marginBottom: 16 }}>
-        {project.domain} · {project.status}
+  <div style={{ lineHeight: 1.6}}>
+    {project.summary && (
+      <div>
+        Summary: {project.summary} 
+      </div>
+    )}
+
+    {project.status && (
+      <div>
+        Stage: {project.status} 
+      </div>
+    )}
+
+    {project.ranking && (
+      <div>
+        Ranking: {project.ranking} 
+      </div>
+    )}
+  </div>
+</header>
+
+
+    {/* Description */}
+    {project.description && (
+      <section style={{ marginBottom: 32 }}>
+        <p style={{ lineHeight: 1.6 }}>{project.description}</p>
+      </section>
+    )}
+
+    <hr />
+
+    {/* Links */}
+    {project.folder_url && (
+      <section style={{ marginTop: 24, marginBottom: 32 }}>
+        <h2 style={{ fontSize: 16, marginBottom: 8 }}>
+          Project Links
+        </h2>
+
+        <ul style={{ paddingLeft: 16 }}>
+          <li>
+            <a
+              href={project.folder_url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open project folder
+            </a>
+          </li>
+        </ul>
+      </section>
+    )}
+
+    <hr />
+
+    {project.comments && (
+  <>
+    <hr style={{ margin: "32px 0" }} />
+
+    <section>
+      <h2 style={{ fontSize: 16, marginBottom: 8 }}>
+        Comments
+      </h2>
+
+      <p
+        style={{
+          whiteSpace: "pre-line",
+          lineHeight: 1.6,
+        }}
+      >
+        {project.comments}
       </p>
+    </section>
+  </>
+)}
 
-      <p>{project.description}</p>
 
-      {project.folder_url && (
-        <p style={{ marginTop: 16 }}>
-          <a href={project.folder_url} target="_blank" rel="noreferrer">
-            Open Project Folder
-          </a>
-        </p>
-      )}
+    {/* Footer */}
+    <footer style={{ marginTop: 40 }}>
+      <a href="/">← Back to dashboard</a>
+    </footer>
+  </main>
+)
 
-      <p style={{ marginTop: 32 }}>
-        <a href="/">← Back to dashboard</a>
-      </p>
-    </main>
-  )
 }

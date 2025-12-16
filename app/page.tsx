@@ -60,7 +60,7 @@ export default function Home() {
         <thead>
           <tr>
             <th style={{ textAlign: "left" }}>project</th>
-            <th style={{ textAlign: "left" }}></th>
+            <th style={{ textAlign: "left" }}>summary</th>
             <th style={{ textAlign: "left" }}>stage</th>
             <th style={{ textAlign: "left" }}>rank</th>
           </tr>
@@ -71,9 +71,9 @@ export default function Home() {
               <td>
                 <a href={`/projects/${project.slug}`}>{project.name}</a>
               </td>
+              <td>{project.summary}</td>
               <td>{project.status}</td>
-              <td>{project.domain}</td>
-              <td>{project.description}</td>
+              <td>{project.ranking}</td>
             </tr>
           ))}
         </tbody>
