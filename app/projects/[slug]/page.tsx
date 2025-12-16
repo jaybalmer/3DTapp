@@ -1,5 +1,18 @@
 import { getProjects } from "@/lib/projects"
 
+const canPreview = (url: string) =>
+  url.includes("/file/d/") || url.toLowerCase().endsWith(".pdf")
+
+const getPreviewUrl = (url: string) => {
+  // Google Drive file → embed
+  if (url.includes("/file/d/")) {
+    return url.replace("/view", "/preview")
+  }
+
+  // PDF → direct embed
+  return url
+}
+
 export default async function ProjectPage({
   params,
 }: {
@@ -30,12 +43,6 @@ return (
   </h1>
 
   <div style={{ lineHeight: 1.6}}>
-    {project.summary && (
-      <div>
-        Summary: {project.summary} 
-      </div>
-    )}
-
     {project.status && (
       <div>
         Stage: {project.status} 
@@ -58,30 +65,7 @@ return (
       </section>
     )}
 
-    <hr />
 
-    {/* Links */}
-    {project.folder_url && (
-      <section style={{ marginTop: 24, marginBottom: 32 }}>
-        <h2 style={{ fontSize: 16, marginBottom: 8 }}>
-          Project Links
-        </h2>
-
-        <ul style={{ paddingLeft: 16 }}>
-          <li>
-            <a
-              href={project.folder_url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Open project folder
-            </a>
-          </li>
-        </ul>
-      </section>
-    )}
-
-    <hr />
 
     {project.comments && (
   <>
@@ -89,7 +73,7 @@ return (
 
     <section>
       <h2 style={{ fontSize: 16, marginBottom: 8 }}>
-        Comments
+        comments
       </h2>
 
       <p
@@ -100,6 +84,79 @@ return (
       >
         {project.comments}
       </p>
+    </section>
+  </>
+)}
+    <hr style={{ margin: "32px 0" }} />
+
+    {/* Links */}
+    {project.folder && (
+      <section style={{ marginTop: 24, marginBottom: 32 }}>
+        <h2 style={{ fontSize: 16, marginBottom: 8 }}>
+          project links
+        </h2>
+
+        <ul>
+          <li>
+            <a
+              href={project.folder}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Project Folder
+            </a>
+          </li>
+        </ul>
+      </section>
+    )}
+
+{project.documents && project.documents.length > 0 && (
+  <>
+
+
+    <section>
+      <h2 style={{ fontSize: 16, marginBottom: 12 }}>
+        key documents
+      </h2>
+
+      {project.documents.map((doc) => {
+        const previewable = canPreview(doc.url)
+        const previewUrl = getPreviewUrl(doc.url)
+
+        return (
+          <div
+            key={doc.url}
+            style={{
+              marginBottom: 24,
+              paddingBottom: 16,
+              borderBottom: "1px solid #eee",
+            }}
+          >
+            <div style={{ marginBottom: 8 }}>
+              <a
+                href={doc.url}
+                target="_blank"
+                rel="noreferrer"
+                style={{ fontWeight: 500 }}
+              >
+                {doc.label}
+              </a>
+            </div>
+
+            {previewable && (
+              <iframe
+                src={previewUrl}
+                style={{
+                  width: "100%",
+                  height: 300,
+                  border: "1px solid #ddd",
+                  borderRadius: 4,
+                }}
+              />
+            )}
+          </div>
+        )
+      })}
     </section>
   </>
 )}

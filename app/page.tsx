@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
-import { getProjects } from "@/lib/projects"
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -16,10 +15,11 @@ export default function Home() {
 })
   }, [])
 
-  useEffect(() => {
+ useEffect(() => {
   if (!user) return
 
-  getProjects()
+  fetch("/api/projects")
+    .then((res) => res.json())
     .then(setProjects)
     .catch(console.error)
 }, [user])
