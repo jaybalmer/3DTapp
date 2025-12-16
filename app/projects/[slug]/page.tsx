@@ -52,9 +52,9 @@ return (
 
 
     {/* Description */}
-    {project.description && (
+    {project.summary && (
       <section style={{ marginBottom: 32 }}>
-        <p style={{ lineHeight: 1.6 }}>{project.description}</p>
+        <p style={{ lineHeight: 1.6 }}>{project.summary}</p>
       </section>
     )}
 
