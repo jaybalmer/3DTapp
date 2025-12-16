@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
+import NavHeader from "@/app/components/NavHeader"
 
 export default function Dashboard() {
   const router = useRouter()
@@ -14,14 +15,20 @@ export default function Dashboard() {
   useEffect(() => {
     let mounted = true
 
+    console.log("[DASHBOARD] resolving session…")
+
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return
 
       const sessionUser = data.session?.user ?? null
+
+      console.log("[DASHBOARD] session resolved:", !!sessionUser)
+
       setUser(sessionUser)
       setLoading(false)
 
       if (!sessionUser) {
+        console.log("[DASHBOARD] redirect → /login")
         router.replace("/login")
       }
     })
@@ -65,6 +72,9 @@ export default function Dashboard() {
   }
 
   return (
+    <>
+      <NavHeader />
+    
     <main style={{ padding: "32px", maxWidth: "900px", margin: "0 auto" }}>
       <h1>Three Dog Tech</h1>
       <p style={{ fontSize: "18px", color: "#666" }}>
@@ -96,5 +106,6 @@ export default function Dashboard() {
         </tbody>
       </table>
     </main>
+  </>
   )
 }

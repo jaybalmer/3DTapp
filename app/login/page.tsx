@@ -14,14 +14,20 @@ export default function Login() {
   useEffect(() => {
     let mounted = true
 
+    console.log("[LOGIN] resolving session…")
+
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return
 
       const sessionUser = data.session?.user ?? null
+      
+      console.log("[LOGIN] session resolved:", !!sessionUser)
+      
       setUser(sessionUser)
       setLoading(false)
 
       if (sessionUser) {
+        console.log("[LOGIN] redirect → /dashboard")
         router.replace("/dashboard")
       }
     })
