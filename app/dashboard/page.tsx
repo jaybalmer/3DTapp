@@ -83,28 +83,59 @@ export default function Dashboard() {
 
       <hr style={{ margin: "24px 0" }} />
 
-      <table width="100%" cellPadding={8}>
-        <thead>
-          <tr>
-            <th style={{ textAlign: "left" }}>project</th>
-            <th style={{ textAlign: "left" }}>summary</th>
-            <th style={{ textAlign: "left" }}>stage</th>
-            <th style={{ textAlign: "center" }}>rank</th>
-          </tr>
-        </thead>
+      <div className="overflow-x-auto">
+      <table className="w-full border-collapse text-sm">
+
+<thead className="border-b bg-gray-50">
+  <tr>
+    <th className="px-3 py-2 text-left font-medium text-gray-600">
+      Project
+    </th>
+    <th className="px-3 py-2 text-left font-medium text-gray-600">
+      Summary
+    </th>
+    <th className="px-3 py-2 text-center font-medium text-gray-600">
+      Stage
+    </th>
+    <th className="px-3 py-2 text-center font-medium text-gray-600">
+      Rank
+    </th>
+  </tr>
+</thead>
+
         <tbody>
-          {projects.map((project) => (
-            <tr key={`${project.slug}-${project.name}`}>
-              <td>
-                <a href={`/projects/${project.slug}`}>{project.name}</a>
-              </td>
-              <td>{project.summary}</td>
-              <td style={{ textAlign: "left" }}>{project.status}</td>
-              <td style={{ textAlign: "center" }}>{project.ranking}</td>
-            </tr>
-          ))}
-        </tbody>
+  {projects.map((project) => (
+    <tr
+      key={`${project.slug}-${project.name}`}
+      className="border-b hover:bg-gray-50"
+    >
+      <td className="px-3 py-2 font-medium">
+        <a
+          href={`/projects/${project.slug}`}
+          className="text-blue-600 hover:underline"
+        >
+          {project.name}
+        </a>
+      </td>
+
+      <td className="px-3 py-2">
+        {project.summary}
+      </td>
+
+      <td className="px-3 py-2 text-center">
+          {project.status}
+      </td>
+
+      <td className="px-3 py-2 text-center font-mono">
+        {project.ranking}
+      </td>
+
+    </tr>
+  ))}
+</tbody>
+
       </table>
+      </div>
     </main>
   </>
   )
