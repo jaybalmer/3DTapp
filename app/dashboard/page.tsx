@@ -77,8 +77,8 @@ export default function Dashboard() {
     
     <main style={{ padding: "32px", maxWidth: "900px", margin: "0 auto" }}>
       <h1>Three Dog Tech</h1>
-      <p style={{ fontSize: "18px", color: "#666" }}>
-        Exploration Dashboard
+      <p style={{ fontSize: "18px"}}>
+        <strong>Exploration Dashboard</strong>
       </p>
 
       <hr style={{ margin: "24px 0" }} />
@@ -89,7 +89,7 @@ export default function Dashboard() {
             <th style={{ textAlign: "left" }}>project</th>
             <th style={{ textAlign: "left" }}>summary</th>
             <th style={{ textAlign: "left" }}>stage</th>
-            <th style={{ textAlign: "left" }}>rank</th>
+            <th style={{ textAlign: "center" }}>rank</th>
           </tr>
         </thead>
         <tbody>
@@ -99,8 +99,8 @@ export default function Dashboard() {
                 <a href={`/projects/${project.slug}`}>{project.name}</a>
               </td>
               <td>{project.summary}</td>
-              <td>{project.status}</td>
-              <td>{project.ranking}</td>
+              <td style={{ textAlign: "left" }}>{project.status}</td>
+              <td style={{ textAlign: "center" }}>{project.ranking}</td>
             </tr>
           ))}
         </tbody>
