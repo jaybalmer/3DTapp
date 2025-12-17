@@ -1,4 +1,5 @@
 import { getProjects } from "@/lib/projects"
+import NavHeader from "@/app/components/NavHeader"
 
 const canPreview = (url: string) =>
   url.includes("/file/d/") || url.toLowerCase().endsWith(".pdf")
@@ -35,6 +36,9 @@ export default async function ProjectPage({
   }
 
 return (
+<>
+  <NavHeader />
+      
   <main style={{ padding: 32, maxWidth: 800, margin: "0 auto" }}>
     {/* Header */}
 <header style={{ marginBottom: 24 }}>
@@ -89,26 +93,6 @@ return (
 )}
     <hr style={{ margin: "32px 0" }} />
 
-    {/* Links */}
-    {project.folder && (
-      <section style={{ marginTop: 24, marginBottom: 32 }}>
-        <h2 style={{ fontSize: 16, marginBottom: 8 }}>
-          Documents
-        </h2>
-
-        <ul>
-          <li>
-            <a
-              href={project.folder}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Project Folder
-            </a>
-          </li>
-        </ul>
-      </section>
-    )}
 {project.documents && project.documents.length > 0 && (
   <>
     <section>
@@ -151,6 +135,24 @@ return (
         )
       })}
     </section>
+ 
+  {/* Links */}
+    {project.folder && (
+      <section style={{ marginTop: 24, marginBottom: 32 }}>
+        <ul>
+          <li>
+            <a
+              href={project.folder}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Project Folder
+            </a>
+          </li>
+        </ul>
+      </section>
+    )}
+
   </>
 )}
 
@@ -160,6 +162,7 @@ return (
       <a href="/dashboard">← Back to dashboard</a>
     </footer>
   </main>
+</>
 )
 
 }

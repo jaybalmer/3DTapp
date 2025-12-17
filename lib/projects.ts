@@ -1,3 +1,10 @@
+import Papa from "papaparse"
+
+export type ProjectDocument = {
+  label: string
+  url: string
+}
+
 export type Project = {
   slug: string
   name: string
@@ -8,10 +15,7 @@ export type Project = {
   comments: string
   documents: ProjectDocument[]
 }
-export type ProjectDocument = {
-  label: string
-  url: string
-}
+
 const clean = (v?: string) =>
   (v ?? "")
     .trim()
@@ -37,20 +41,9 @@ const parseDocuments = (raw?: string): ProjectDocument[] => {
     })
     .filter(Boolean) as ProjectDocument[]
 }
-const SHEET_HEADERS = {
-  slug: "slug",
-  name: "name",
-  summary: "summary",
-  status: "status",
-  ranking: "ranking",
-  folder: "folder",
-  comments: "comments",
-  documents: "documents",
-} as const
-
 
 export async function getProjects(): Promise<Project[]> {
-    const res = await fetch(
+  const res = await fetch(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vRsOY9qQSTMElqN-EYUBlHbuCpUYkUAKTkD6_5hNnzSDF__Uv9Bu5OYrVXvvKG5Wvc0PtmFawI32fEJ/pub?output=csv",
     { cache: "no-store" }
   )
@@ -60,54 +53,32 @@ export async function getProjects(): Promise<Project[]> {
   }
 
   const text = await res.text()
-  const lines = text.trim().split("\n")
-  const [headerLine, ...rows] = lines
-  const headers = headerLine.split(",").map(clean)
 
-  const getByHeader = (cols: string[], header: string) => {
-    const index = headers.indexOf(header)
-    return index === -1 ? "" : clean(cols[index])
+  const parsed = Papa.parse(text, {
+    header: true,
+    skipEmptyLines: true,
+  })
+
+  if (parsed.errors.length) {
+    console.error("CSV parse errors:", parsed.errors)
   }
 
-  
-  const parseDocuments = (raw?: string) => {
-  if (!raw) return []
+  const rows = parsed.data as any[]
 
-  return raw
-    .split("\n")
-    .map((line) => {
-      const [label, url] = line.split("|").map((s) => s.trim())
-      if (!label || !url) return null
-      if (!url.startsWith("http")) return null
-      return { label, url }
+  return rows
+    .map((row) => {
+      if (!row.name) return null
+
+      return {
+        slug: row.slug || slugify(row.name),
+        name: clean(row.name),
+        summary: clean(row.summary),
+        status: clean(row.status),
+        ranking: clean(row.ranking),
+        folder: clean(row.folder),
+        comments: clean(row.comments),
+        documents: parseDocuments(row.documents),
+      }
     })
-    .filter(Boolean) as { label: string; url: string }[]
-}
-  return rows.map((row) => {
-    const cols = row.split(",")
-
-    const slug = getByHeader(cols, SHEET_HEADERS.slug)
-    const name = getByHeader(cols, SHEET_HEADERS.name)
-    const summary = getByHeader(cols, SHEET_HEADERS.summary)
-    const status = getByHeader(cols, SHEET_HEADERS.status)
-    const ranking = getByHeader(cols, SHEET_HEADERS.ranking)
-    const folder = getByHeader(cols, SHEET_HEADERS.folder)
-    const comments = getByHeader(cols, SHEET_HEADERS.comments)
-
-    const documentsRaw = getByHeader(cols, SHEET_HEADERS.documents)
-    const documents = parseDocuments(documentsRaw)
-
-    if (!name) return null
-
-    return {
-      slug: slug || slugify(name),
-      name,
-      summary,
-      status,
-      ranking,
-      folder,
-      comments,
-      documents,
-    }
-  }).filter(Boolean) as Project[]
+    .filter(Boolean) as Project[]
 }
