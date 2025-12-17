@@ -1,16 +1,16 @@
 "use client"
 
 import Link from "next/link"
-import { supabase } from "@/lib/supabaseClient"
+import { logout } from "@/lib/simpleAuth"
 import { useRouter } from "next/navigation"
 
 export default function NavHeader() {
   const router = useRouter()
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.replace("/login")
-  }
+  const handleLogout = () => {
+  logout()
+  router.replace("/")
+}
 
   return (
     <header

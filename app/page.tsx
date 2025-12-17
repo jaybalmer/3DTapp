@@ -2,19 +2,16 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabaseClient"
+import { isAuthenticated } from "@/lib/simpleAuth"
 
 export default function Home() {
   const router = useRouter()
   const [checking, setChecking] = useState(false)
 
-  const handleEnter = async () => {
+  const handleEnter = () => {
     setChecking(true)
 
-    const { data } = await supabase.auth.getSession()
-    const user = data.session?.user
-
-    if (user) {
+    if (isAuthenticated()) {
       router.push("/dashboard")
     } else {
       router.push("/login")

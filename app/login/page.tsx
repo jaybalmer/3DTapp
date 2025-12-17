@@ -1,88 +1,43 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabaseClient"
+import { login } from "@/lib/simpleAuth"
 
 export default function Login() {
   const router = useRouter()
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
-  const [email, setEmail] = useState("")
-  const [sent, setSent] = useState(false)
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
 
-  useEffect(() => {
-    let mounted = true
-
-    console.log("[LOGIN] resolving session…")
-
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return
-
-      const sessionUser = data.session?.user ?? null
-      
-      console.log("[LOGIN] session resolved:", !!sessionUser)
-      
-      setUser(sessionUser)
-      setLoading(false)
-
-      if (sessionUser) {
-        console.log("[LOGIN] redirect → /dashboard")
-        router.replace("/dashboard")
-      }
-    })
-
-const handleLogin = async (e: React.FormEvent) => {
-  e.preventDefault()
-
-  await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: `${window.location.origin}/dashboard`,
-    },
-  })
-
-  setSent(true)
-}
-
-
-    return () => {
-      mounted = false
-    }
-  }, [router])
-
-const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
-      },
-    })
-
-    setSent(true)
+    if (login(password)) {
+      router.replace("/dashboard")
+    } else {
+      setError("Incorrect password")
+    }
   }
 
-  if (loading) return <p>Loading…</p>
-
   return (
-    <main>
-      {sent ? (
-  <p>Check your email for the magic link.</p>
-) : (
-  <form onSubmit={handleLogin}>
-    <input
-      type="email"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      placeholder="you@example.com"
-      required
-    />
-    <button type="submit">Send magic link</button>
-  </form>
-)}
+    <main className="mx-auto max-w-sm px-6 py-16">
+      <h1 className="mb-6 text-xl font-medium">Enter Access Password</h1>
 
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full border px-3 py-2"
+          placeholder="Password"
+        />
+
+        {error && <p className="text-sm text-red-600">{error}</p>}
+
+        <button className="w-full border border-black px-4 py-2">
+          Enter
+        </button>
+      </form>
     </main>
   )
 }

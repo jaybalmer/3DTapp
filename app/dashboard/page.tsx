@@ -2,74 +2,26 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabaseClient"
+import { isAuthenticated } from "@/lib/simpleAuth"
 import NavHeader from "@/app/components/NavHeader"
 
 export default function Dashboard() {
   const router = useRouter()
-
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
   const [projects, setProjects] = useState<any[]>([])
 
   useEffect(() => {
-    let mounted = true
-
-    console.log("[DASHBOARD] resolving session…")
-
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return
-
-      const sessionUser = data.session?.user ?? null
-
-      console.log("[DASHBOARD] session resolved:", !!sessionUser)
-
-      setUser(sessionUser)
-      setLoading(false)
-
-      if (!sessionUser) {
-        console.log("[DASHBOARD] redirect → /login")
-        router.replace("/login")
-      }
-    })
-
-    return () => {
-      mounted = false
+    if (!isAuthenticated()) {
+      router.replace("/login")
     }
   }, [router])
 
-
  useEffect(() => {
-  if (!user) return
-
   fetch("/api/projects")
     .then((res) => res.json())
     .then(setProjects)
     .catch(console.error)
-}, [user])
+}, [])
 
-  if (loading) return <p>Loading…</p>
-
-  if (!user) {
-    if (typeof window !== "undefined") {
-      window.location.href = "/dashboard"
-    }
-    return null
-  }
-  
-    const ALLOWED_EMAILS = [
-    "jaybalmer@gmail.com",
-    "damien@quaestus.vc",
-    "ysimkin@aflatminor.com",
-  ]
-
-  if (!ALLOWED_EMAILS.includes(user.email)) {
-    supabase.auth.signOut()
-    if (typeof window !== "undefined") {
-      window.location.href = "/login"
-    }
-    return null
-  }
 
   return (
     <>
