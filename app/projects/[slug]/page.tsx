@@ -76,9 +76,6 @@ return (
     <hr style={{ margin: "32px 0" }} />
 
     <section>
-      <h2 style={{ fontSize: 16, marginBottom: 8 }}>
-        comments
-      </h2>
 
       <p
         style={{
