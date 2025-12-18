@@ -5,6 +5,7 @@ import Link from "next/link"
 import { logout, getCurrentUser, type User } from "@/lib/simpleAuth"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
+import DarkModeToggle from "@/app/components/DarkModeToggle"
 
 export default function NavHeader() {
   const router = useRouter()
@@ -43,6 +44,7 @@ export default function NavHeader() {
               {user.email}
             </div>
           )}
+          <DarkModeToggle />
           <button
             onClick={handleLogout}
             className={cn(
