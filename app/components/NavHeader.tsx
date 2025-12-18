@@ -1,34 +1,59 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Link from "next/link"
-import { logout } from "@/lib/simpleAuth"
+import { logout, getCurrentUser, type User } from "@/lib/simpleAuth"
 import { useRouter } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 export default function NavHeader() {
   const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    setUser(getCurrentUser())
+  }, [])
 
   const handleLogout = () => {
-  logout()
-  router.replace("/")
-}
+    logout()
+    router.replace("/")
+  }
 
   return (
-    <header
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "12px 24px",
-        borderBottom: "1px solid #eee",
-        marginBottom: 32,
-      }}
-    >
-      <nav style={{ display: "flex", gap: 16 }}>
-        <Link href="/">Home</Link>
-        <Link href="/dashboard">Dashboard</Link>
-      </nav>
+    <header className="sticky top-0 z-50 border-b border-border/20 bg-background/80 backdrop-blur-sm">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <nav className="flex items-center gap-6">
+          <Link
+            href="/"
+            className="text-xs font-mono uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Home
+          </Link>
+          <Link
+            href="/dashboard"
+            className="text-xs font-mono uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Dashboard
+          </Link>
+        </nav>
 
-      <button onClick={handleLogout}>Logout</button>
+        <div className="flex items-center gap-4">
+          {user && (
+            <div className="text-xs font-mono text-muted-foreground">
+              {user.email}
+            </div>
+          )}
+          <button
+            onClick={handleLogout}
+            className={cn(
+              "text-xs font-mono uppercase tracking-wide text-muted-foreground",
+              "hover:text-foreground transition-colors"
+            )}
+          >
+            Logout
+          </button>
+        </div>
+      </div>
     </header>
   )
 }

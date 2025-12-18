@@ -21,8 +21,33 @@
   --destructive-foreground: 210 40% 98%;
 }
 
+.dark {
+  /* Core */
+  --background: 222.2 47.4% 11.2%;
+  --foreground: 210 40% 98%;
+
+  /* Surfaces */
+  --card: 222.2 47.4% 11.2%;
+  --card-foreground: 210 40% 98%;
+
+  /* UI neutrals */
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+
+  /* Borders */
+  --border: 217.2 32.6% 17.5%;
+
+  /* Optional */
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+}
+
 html {
-  color-scheme: light; /* prevents browser dark form defaults */
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
