@@ -17,6 +17,19 @@ function hashPassword(password: string): string {
 }
 
 function getUsers(): User[] {
+  // Try environment variable first (for production/Vercel)
+  if (process.env.USERS_DATA) {
+    try {
+      const parsed = JSON.parse(process.env.USERS_DATA)
+      if (Array.isArray(parsed)) {
+        return parsed
+      }
+    } catch (error) {
+      console.error("Error parsing USERS_DATA env var:", error)
+    }
+  }
+
+  // Fall back to file system (for local development)
   try {
     const data = readFileSync(USERS_FILE, "utf-8")
     const parsed = JSON.parse(data)
@@ -32,10 +45,31 @@ function getUsers(): User[] {
 }
 
 function saveUsers(users: User[]): void {
-  writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), "utf-8")
+  // Only save to file in local development
+  // In production, users should be managed via environment variables
+  if (process.env.NODE_ENV !== "production") {
+    try {
+      writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), "utf-8")
+    } catch (error) {
+      console.error("Error saving users.json:", error)
+    }
+  }
 }
 
 function getAllowedEmails(): string[] {
+  // Try environment variable first (for production/Vercel)
+  if (process.env.ALLOWED_EMAILS) {
+    try {
+      const parsed = JSON.parse(process.env.ALLOWED_EMAILS)
+      if (Array.isArray(parsed)) {
+        return parsed
+      }
+    } catch (error) {
+      console.error("Error parsing ALLOWED_EMAILS env var:", error)
+    }
+  }
+
+  // Fall back to file system (for local development)
   try {
     const data = readFileSync(ALLOWED_EMAILS_FILE, "utf-8")
     const parsed = JSON.parse(data)
@@ -106,6 +140,14 @@ export async function POST(request: Request) {
 
     users.push(newUser)
     saveUsers(users)
+
+    // In production, warn that new users need to be added via environment variables
+    if (process.env.NODE_ENV === "production") {
+      console.warn(
+        "New user registered in production. Update USERS_DATA environment variable:",
+        JSON.stringify(users)
+      )
+    }
 
     return NextResponse.json({
       email: newUser.email,

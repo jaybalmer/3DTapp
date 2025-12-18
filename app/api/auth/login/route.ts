@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { readFileSync, writeFileSync } from "fs"
+import { readFileSync } from "fs"
 import { join } from "path"
 import { createHash } from "crypto"
 
@@ -16,6 +16,19 @@ function hashPassword(password: string): string {
 }
 
 function getUsers(): User[] {
+  // Try environment variable first (for production/Vercel)
+  if (process.env.USERS_DATA) {
+    try {
+      const parsed = JSON.parse(process.env.USERS_DATA)
+      if (Array.isArray(parsed)) {
+        return parsed
+      }
+    } catch (error) {
+      console.error("Error parsing USERS_DATA env var:", error)
+    }
+  }
+
+  // Fall back to file system (for local development)
   try {
     const data = readFileSync(USERS_FILE, "utf-8")
     const parsed = JSON.parse(data)
