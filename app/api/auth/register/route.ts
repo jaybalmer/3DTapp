@@ -19,8 +19,14 @@ function hashPassword(password: string): string {
 function getUsers(): User[] {
   try {
     const data = readFileSync(USERS_FILE, "utf-8")
-    return JSON.parse(data)
+    const parsed = JSON.parse(data)
+    if (!Array.isArray(parsed)) {
+      console.error("users.json is not an array")
+      return []
+    }
+    return parsed
   } catch (error) {
+    console.error("Error reading users.json:", error)
     return []
   }
 }
@@ -32,8 +38,14 @@ function saveUsers(users: User[]): void {
 function getAllowedEmails(): string[] {
   try {
     const data = readFileSync(ALLOWED_EMAILS_FILE, "utf-8")
-    return JSON.parse(data)
+    const parsed = JSON.parse(data)
+    if (!Array.isArray(parsed)) {
+      console.error("allowedEmails.json is not an array")
+      return []
+    }
+    return parsed
   } catch (error) {
+    console.error("Error reading allowedEmails.json:", error)
     return []
   }
 }
@@ -101,8 +113,9 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error("Registration error:", error)
+    const errorMessage = error instanceof Error ? error.message : "Unknown error"
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: `Internal server error: ${errorMessage}` },
       { status: 500 }
     )
   }
