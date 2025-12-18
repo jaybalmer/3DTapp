@@ -21,7 +21,8 @@ export default function Login() {
 
   return (
     <main className="mx-auto max-w-sm px-6 py-16">
-      <h1 className="mb-6 text-xl font-medium">Enter Access Password</h1>
+      <h1 className="mb-2 text-xl font-medium text-center">Welcome Dog</h1>
+      <h2 className="mb-6 text-base text-gray-600 text-center">What's the password?</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -34,7 +35,7 @@ export default function Login() {
 
         {error && <p className="text-sm text-red-600">{error}</p>}
 
-        <button className="w-full border border-black px-4 py-2">
+        <button className="w-full border border-blue px-4 py-2">
           Enter
         </button>
       </form>

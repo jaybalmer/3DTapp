@@ -27,7 +27,7 @@ export default function Home() {
         lineHeight: 1.6,
       }}
     >
-      <h1 style={{ marginBottom: 8 }}>Three Dog Tech</h1>
+      <h1 style={{ marginBottom: 8 }}>THREE DOG TECH</h1>
 
       <p style={{ fontSize: 18, marginBottom: 32 }}>
         Tech Exploration and Company Development
@@ -54,7 +54,7 @@ export default function Home() {
         style={{
           marginTop: 16,
           padding: "10px 16px",
-          border: "1px solid #000",
+          border: "1px solid #999",
           background: "transparent",
           cursor: "pointer",
           fontWeight: 500,

@@ -5,6 +5,15 @@ import { useRouter } from "next/navigation"
 import { isAuthenticated } from "@/lib/simpleAuth"
 import NavHeader from "@/app/components/NavHeader"
 
+const RANK_ORDER = ["A+", "A", "B", "C", "D", "E", "X"]
+const rankTextColor: Record<string, string> = {
+  "A+": "text-blue-300",
+  "A": "text-emerald-200",
+  "B": "text-emerald-300",
+  "C": "text-emerald-500",
+  "D": "text-yellow-500"
+}
+
 export default function Dashboard() {
   const router = useRouter()
   const [projects, setProjects] = useState<any[]>([])
@@ -22,73 +31,66 @@ export default function Dashboard() {
     .catch(console.error)
 }, [])
 
+const groupedByRank = RANK_ORDER.map((rank) => ({
+  rank,
+  projects: projects.filter((p) => p.ranking === rank),
+}))
 
-  return (
-    <>
-      <NavHeader />
-    
-    <main style={{ padding: "32px", maxWidth: "900px", margin: "0 auto" }}>
-      <h1>Three Dog Tech</h1>
-      <p style={{ fontSize: "18px"}}>
-        <strong>Exploration Dashboard</strong>
-      </p>
+const unranked = projects.filter(
+  (p) => !RANK_ORDER.includes(p.ranking)
+)
 
-      <hr style={{ margin: "24px 0" }} />
+return (
+  <>
+    <NavHeader />
 
-      <div className="overflow-x-auto">
-      <table className="w-full border-collapse text-sm">
+    <main className="mx-auto max-w-5xl px-6 py-8">
+      {groupedByRank.map(({ rank, projects }) =>
+        projects.length ? (
+          <section key={rank} className="mb-12">
 
-<thead className="border-b bg-gray-50">
-  <tr>
-    <th className="px-3 py-2 text-left font-medium text-gray-600">
-      Project
-    </th>
-    <th className="px-3 py-2 text-left font-medium text-gray-600">
-      Summary
-    </th>
-    <th className="px-3 py-2 text-center font-medium text-gray-600">
-      Stage
-    </th>
-    <th className="px-3 py-2 text-center font-medium text-gray-600">
-      Rank
-    </th>
-  </tr>
-</thead>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b">
+                  <th className="py-2 text-left text-gray-600">{rank} - projects ({projects.length})</th>
+                  <th className="py-2 text-left text-gray-600">summary</th>
+                  <th className="py-2 text-center text-gray-600">stage</th>
+                  <th className="py-2 text-center text-gray-600">rank</th>
+                </tr>
+              </thead>
+              <tbody>
+                {projects.map((project) => (
+                  <tr
+                    key={project.slug}
+                    className="border-b hover:bg-gray-800"
+                  >
+                    <td className="py-2">
+                      <a
+  href={`/projects/${project.slug}`}
+  className={`hover:underline ${
+    rankTextColor[rank] ?? ""
+  } font-medium`}
+>
+  {project.name}
+</a>
 
-        <tbody>
-  {projects.map((project) => (
-    <tr
-      key={`${project.slug}-${project.name}`}
-      className="border-b hover:bg-gray-50"
-    >
-      <td className="px-3 py-2 font-medium">
-        <a
-          href={`/projects/${project.slug}`}
-          className="text-blue-600 hover:underline"
-        >
-          {project.name}
-        </a>
-      </td>
-
-      <td className="px-3 py-2">
-        {project.summary}
-      </td>
-
-      <td className="px-3 py-2 text-center">
-          {project.status}
-      </td>
-
-      <td className="px-3 py-2 text-center font-mono">
-        {project.ranking}
-      </td>
-
-    </tr>
-  ))}
-</tbody>
-
-      </table>
-      </div>
+                    </td>
+                    <td className="py-2 text-gray-500">
+                      {project.summary}
+                    </td>
+                    <td className="py-2 text-center">
+                      {project.status}
+                    </td>
+                    <td className="py-2 text-center font-semibold">
+                      {project.ranking}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
+        ) : null
+      )}
     </main>
   </>
-  )
-}
+)}
