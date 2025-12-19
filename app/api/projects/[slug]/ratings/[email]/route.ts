@@ -14,12 +14,6 @@ export async function GET(
       )
     }
 
-// GET a specific user's rating for a project
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ slug: string; email: string }> }
-) {
-  try {
     const { slug, email } = await params
 
     const { data, error } = await supabase
