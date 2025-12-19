@@ -335,14 +335,24 @@ export default function Dashboard() {
       </span>
     </span>
 
-    {["A+", "A", "B", "C", "D", "E", "X"].map((r) => (
-      <span key={r}>
-        {r}&nbsp;
-        <span className="text-xl font-medium text-foreground">
-          {projects.filter((p) => p.ranking === r).length}
+    {[
+      { label: "Plays", statuses: ["New Play", "Play"] },
+      { label: "Exploration", statuses: ["Exploration"] },
+      { label: "Concept", statuses: ["Concept"] },
+      { label: "Development", statuses: ["Development"] },
+    ].map(({ label, statuses }) => {
+      const count = projects.filter((p) => 
+        statuses.some((s) => p.status === s)
+      ).length
+      return (
+        <span key={label}>
+          {label}&nbsp;
+          <span className="text-xl font-medium text-foreground">
+            {count}
+          </span>
         </span>
-      </span>
-    ))}
+      )
+    })}
   </div>
 
 </header>

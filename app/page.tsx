@@ -54,7 +54,7 @@ export default function Home() {
               <div className="border-l-2 border-border/40 pl-6">
                 <p className="text-sm leading-relaxed text-muted-foreground/90">
                   Three Dog Tech explores technology opportunities before companies are
-                  formed. The goal is to reduce risk early by validating ideas through
+                  formed. The goal is to reduce risk early by validating plays through
                   focused exploration, documentation, and selective progression.
                 </p>
               </div>
