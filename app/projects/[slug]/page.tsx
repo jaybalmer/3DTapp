@@ -1,5 +1,6 @@
 import { getProjects } from "@/lib/projects"
 import NavHeader from "@/app/components/NavHeader"
+import ProjectRatings from "@/app/components/ProjectRatings"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
@@ -106,11 +107,11 @@ export default async function ProjectPage({
           </section>
         )}
 
-        {/* Comments */}
+        {/* Project Comments (from Google Sheet) */}
         {project.comments && (
           <section className="space-y-2">
             <h2 className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
-              Comments
+              Project Notes
             </h2>
             <div className="border border-border/20 bg-card p-6">
               <p className="text-sm leading-relaxed text-muted-foreground/90 whitespace-pre-line">
@@ -119,6 +120,9 @@ export default async function ProjectPage({
             </div>
           </section>
         )}
+
+        {/* Team Ratings & Comments */}
+        <ProjectRatings projectSlug={slug} />
 
         {/* Documents */}
         {project.documents && project.documents.length > 0 && (
