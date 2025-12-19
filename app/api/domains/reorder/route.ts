@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
     // Update each domain's ranking
     const updates = rankings.map(({ slug, ranking }: { slug: string; ranking: number }) =>
-      supabase
+      supabase!
         .from("domains")
         .update({ ranking })
         .eq("slug", slug)
