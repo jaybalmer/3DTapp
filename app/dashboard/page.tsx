@@ -93,14 +93,14 @@ function ConvictionSection({
       {/* Mobile Card Layout */}
       <div className="md:hidden space-y-3">
         {projects.map((project) => (
-          <div key={project.slug} className="space-y-2">
-            <div
-              className={cn(
-                "border border-border/20 bg-card p-4 space-y-3",
-                "border-l-4",
-                config.borderColor
-              )}
-            >
+          <div
+            key={project.slug}
+            className={cn(
+              "border border-border/20 bg-card p-4 space-y-3",
+              "border-l-4",
+              config.borderColor
+            )}
+          >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <a
@@ -123,38 +123,37 @@ function ConvictionSection({
                   Stage: <span className="font-medium text-foreground">{project.status}</span>
                 </div>
               )}
-            </div>
-            
-            {decisions[project.slug] && (
-              <div className="bg-muted/10 px-3 py-2 ml-4 -mt-1">
-                <div className="flex flex-wrap items-center gap-3 text-xs">
-                  <span className="font-mono font-semibold text-foreground">
-                    {decisions[project.slug].decision_status}
-                  </span>
-                  {decisions[project.slug].next_steps && (
-                    <>
-                      <span className="text-border">•</span>
-                      <span className="text-muted-foreground/80">
-                        {decisions[project.slug].next_steps}
-                      </span>
-                    </>
-                  )}
-                  {decisions[project.slug].next_phase_budget && (
-                    <>
-                      <span className="text-border">•</span>
-                      <span className="font-mono text-muted-foreground">
-                        {new Intl.NumberFormat("en-CA", {
-                          style: "currency",
-                          currency: "CAD",
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        }).format(decisions[project.slug].next_phase_budget)}
-                      </span>
-                    </>
-                  )}
+              
+              {decisions[project.slug] && (
+                <div className="pt-2 border-t border-border/20">
+                  <div className="flex flex-wrap items-center gap-3 text-xs">
+                    <span className="font-mono font-semibold text-foreground">
+                      {decisions[project.slug].decision_status}
+                    </span>
+                    {decisions[project.slug].next_steps && (
+                      <>
+                        <span className="text-border">•</span>
+                        <span className="text-muted-foreground/80">
+                          {decisions[project.slug].next_steps}
+                        </span>
+                      </>
+                    )}
+                    {decisions[project.slug].next_phase_budget && (
+                      <>
+                        <span className="text-border">•</span>
+                        <span className="font-mono text-muted-foreground">
+                          {new Intl.NumberFormat("en-CA", {
+                            style: "currency",
+                            currency: "CAD",
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }).format(decisions[project.slug].next_phase_budget)}
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         ))}
       </div>
