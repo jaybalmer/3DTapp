@@ -126,7 +126,7 @@ export default function ProjectPosts({ projectSlug }: ProjectPostsProps) {
     // URL pattern: matches http://, https://, or www. followed by domain and path
     const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}[^\s]*)/g
     
-    const parts: (string | JSX.Element)[] = []
+    const parts: (string | ReactElement)[] = []
     let lastIndex = 0
     let match
     let keyCounter = 0
