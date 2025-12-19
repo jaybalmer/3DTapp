@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, ReactElement } from "react"
 import { getCurrentUser } from "@/lib/simpleAuth"
 import { cn } from "@/lib/utils"
 
@@ -122,7 +122,7 @@ export default function ProjectPosts({ projectSlug }: ProjectPostsProps) {
     return post.posted_by.toLowerCase() === user.email.toLowerCase()
   }
 
-  const linkifyText = (text: string): (string | JSX.Element)[] => {
+  const linkifyText = (text: string): (string | ReactElement)[] => {
     // URL pattern: matches http://, https://, or www. followed by domain and path
     const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}[^\s]*)/g
     
