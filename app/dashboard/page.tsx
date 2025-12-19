@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Fragment } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { isAuthenticated } from "@/lib/simpleAuth"
 import NavHeader from "@/app/components/NavHeader"
 import { cn } from "@/lib/utils"
@@ -71,6 +72,7 @@ function ConvictionSection({
   projects: any[]
   decisions: Record<string, any>
 }) {
+  const router = useRouter()
   const config = convictionConfig[level]
   if (!config || !projects.length) return null
 
@@ -93,22 +95,20 @@ function ConvictionSection({
       {/* Mobile Card Layout */}
       <div className="md:hidden space-y-3">
         {projects.map((project) => (
-          <div
+          <Link
             key={project.slug}
+            href={`/projects/${project.slug}`}
             className={cn(
-              "border border-border/20 bg-card p-4 space-y-3",
-              "border-l-4",
+              "block border border-border/20 bg-card p-4 space-y-3",
+              "border-l-4 cursor-pointer transition-colors hover:bg-muted/10",
               config.borderColor
             )}
           >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
-                  <a
-                    href={`/projects/${project.slug}`}
-                    className="block text-[15px] font-semibold tracking-tight text-foreground no-underline hover:underline"
-                  >
+                  <div className="text-[15px] font-semibold tracking-tight text-foreground">
                     {project.name}
-                  </a>
+                  </div>
                 </div>
               </div>
               
@@ -154,7 +154,7 @@ function ConvictionSection({
                   </div>
                 </div>
               )}
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -182,8 +182,9 @@ function ConvictionSection({
             {projects.map((project, index) => (
               <Fragment key={project.slug}>
                 <tr
+                  onClick={() => router.push(`/projects/${project.slug}`)}
                   className={cn(
-                    "border-l border-border/40 transition-colors hover:bg-muted/20",
+                    "border-l border-border/40 transition-colors hover:bg-muted/20 cursor-pointer",
                     decisions[project.slug] && "border-b-0",
                     config.borderColor
                   )}
@@ -191,12 +192,9 @@ function ConvictionSection({
                   <td className={cn("px-6 py-3", decisions[project.slug] && "border-b-0")}>
                     <div className="flex items-start gap-3">
                       <div className="mt-1 h-2 w-[2px] bg-foreground/40" />
-                      <a
-                        href={`/projects/${project.slug}`}
-                        className="block text-[15px] font-semibold tracking-tight text-foreground no-underline hover:underline"
-                      >
+                      <div className="text-[15px] font-semibold tracking-tight text-foreground">
                         {project.name}
-                      </a>
+                      </div>
                     </div>
                   </td>
 

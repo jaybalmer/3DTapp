@@ -2,6 +2,10 @@ import { getProjects } from "@/lib/projects"
 import NavHeader from "@/app/components/NavHeader"
 import ProjectRatings from "@/app/components/ProjectRatings"
 import ProjectDecision from "@/app/components/ProjectDecision"
+import ProjectPosts from "@/app/components/ProjectPosts"
+import CopyLinkButton from "@/app/components/CopyLinkButton"
+import ScrollToSection from "@/app/components/ScrollToSection"
+import { Suspense } from "react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
@@ -52,6 +56,9 @@ export default async function ProjectPage({
   return (
     <>
       <NavHeader />
+      <Suspense fallback={null}>
+        <ScrollToSection />
+      </Suspense>
 
       <main className="mx-auto max-w-4xl px-6 py-10 space-y-6">
         {/* Header */}
@@ -60,11 +67,16 @@ export default async function ProjectPage({
             <h1 className="text-3xl font-semibold tracking-tight font-mono leading-tight">
               {project.name}
             </h1>
-            {project.ranking && (
-              <span className="inline-flex items-center justify-center rounded bg-muted px-3 py-1 text-sm font-mono font-semibold shrink-0">
-                {project.ranking}
-              </span>
-            )}
+            <div className="flex items-center gap-3 shrink-0">
+              <Suspense fallback={null}>
+                <CopyLinkButton />
+              </Suspense>
+              {project.ranking && (
+                <span className="inline-flex items-center justify-center rounded bg-muted px-3 py-1 text-sm font-mono font-semibold">
+                  {project.ranking}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
@@ -123,10 +135,12 @@ export default async function ProjectPage({
         )}
 
         {/* Team Ratings & Comments */}
-        <ProjectRatings projectSlug={slug} />
+        <div id="ratings">
+          <ProjectRatings projectSlug={slug} />
+        </div>
 
         {/* Project Decision */}
-        <section className="space-y-4">
+        <section id="decision" className="space-y-4">
           <h2 className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
             Decision
           </h2>
@@ -139,7 +153,7 @@ export default async function ProjectPage({
             <h2 className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
               Documents
             </h2>
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {project.documents.map((doc) => {
                 const previewable = canPreview(doc.url)
                 const previewUrl = getPreviewUrl(doc.url)
@@ -147,7 +161,7 @@ export default async function ProjectPage({
                 return (
                   <div
                     key={doc.url}
-                    className="border border-border/20 bg-card p-6 space-y-4"
+                    className="p-4 space-y-3"
                   >
                     <div>
                       <a
@@ -178,7 +192,7 @@ export default async function ProjectPage({
                       <div className="border border-border/20 rounded overflow-hidden">
                         <iframe
                           src={previewUrl}
-                          className="w-full h-[500px] hidden md:block"
+                          className="w-full h-[300px] hidden md:block"
                           title={doc.label}
                           sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
                         />
@@ -203,6 +217,14 @@ export default async function ProjectPage({
             </div>
           </section>
         )}
+
+        {/* Posts */}
+        <section className="space-y-4">
+          <h2 className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
+            Posts
+          </h2>
+          <ProjectPosts projectSlug={slug} />
+        </section>
 
         {/* Footer */}
         <footer className="pt-8 border-t border-border/20">
