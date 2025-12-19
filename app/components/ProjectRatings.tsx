@@ -155,13 +155,8 @@ export default function ProjectRatings({ projectSlug }: ProjectRatingsProps) {
                     <span className="inline-flex items-center justify-center rounded bg-muted px-3 py-1 text-sm font-mono font-semibold">
                       {rating.ranking}
                     </span>
-                    <div>
-                      <div className="text-sm font-semibold tracking-tight">
-                        {rating.user_name}
-                      </div>
-                      <div className="text-xs text-muted-foreground font-mono">
-                        {rating.user_email}
-                      </div>
+                    <div className="text-sm font-semibold tracking-tight">
+                      {rating.user_name}
                     </div>
                   </div>
                   {rating.updated_at && (
