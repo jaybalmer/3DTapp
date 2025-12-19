@@ -145,26 +145,42 @@ export default function ProjectRatings({ projectSlug }: ProjectRatingsProps) {
             Team Ratings ({ratings.length})
           </h3>
           <div className="space-y-3">
-            {ratings.map((rating) => (
-              <div
-                key={rating.id}
-                className="border border-border/20 bg-card p-4 space-y-2"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center justify-center rounded bg-muted px-3 py-1 text-sm font-mono font-semibold">
-                      {rating.ranking}
-                    </span>
-                    <div className="text-sm font-semibold tracking-tight">
-                      {rating.user_name}
+            {ratings.map((rating) => {
+              const isCurrentUser = currentUser && rating.user_email.toLowerCase() === currentUser.email.toLowerCase()
+              return (
+                <div
+                  key={rating.id}
+                  className="border border-border/20 bg-card p-4 space-y-2"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex items-center justify-center rounded bg-muted px-3 py-1 text-sm font-mono font-semibold">
+                        {rating.ranking}
+                      </span>
+                      <div className="text-sm font-semibold tracking-tight">
+                        {rating.user_name}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      {rating.updated_at && (
+                        <div className="text-xs text-muted-foreground font-mono">
+                          {new Date(rating.updated_at).toLocaleDateString()}
+                        </div>
+                      )}
+                      {isCurrentUser && !showForm && (
+                        <button
+                          onClick={() => setShowForm(true)}
+                          className={cn(
+                            "px-3 py-1 text-xs font-medium tracking-tight transition-colors",
+                            "border border-border/40 bg-card hover:bg-muted/20",
+                            "font-mono"
+                          )}
+                        >
+                          Edit
+                        </button>
+                      )}
                     </div>
                   </div>
-                  {rating.updated_at && (
-                    <div className="text-xs text-muted-foreground font-mono shrink-0">
-                      {new Date(rating.updated_at).toLocaleDateString()}
-                    </div>
-                  )}
-                </div>
                 {rating.comment && (
                   <div className="pt-2 border-t border-border/20">
                     <p className="text-sm leading-relaxed text-muted-foreground/90 whitespace-pre-line">
@@ -173,7 +189,8 @@ export default function ProjectRatings({ projectSlug }: ProjectRatingsProps) {
                   </div>
                 )}
               </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}
@@ -184,18 +201,18 @@ export default function ProjectRatings({ projectSlug }: ProjectRatingsProps) {
         </div>
       )}
 
-      {/* Your Rating Button - Below Team Ratings */}
-      {currentUser && (
+      {/* Add Rating Button - Only show if user hasn't rated yet */}
+      {currentUser && !userRating && !showForm && (
         <div className="flex items-center justify-end">
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => setShowForm(true)}
             className={cn(
               "px-4 py-2 text-sm font-medium tracking-tight transition-colors",
               "border border-border/40 bg-card hover:bg-muted/20",
               "font-mono"
             )}
           >
-            {showForm ? "Hide" : userRating ? "Edit Your Rating" : "Add Your Rating"}
+            Add Your Rating
           </button>
         </div>
       )}
@@ -207,14 +224,26 @@ export default function ProjectRatings({ projectSlug }: ProjectRatingsProps) {
             <h3 className="text-sm font-semibold tracking-tight font-mono">
               Your Rating
             </h3>
-            {userRating && (
+            <div className="flex items-center gap-3">
+              {userRating && (
+                <button
+                  onClick={handleDelete}
+                  className="text-xs text-muted-foreground hover:text-destructive transition-colors font-mono"
+                >
+                  Delete
+                </button>
+              )}
               <button
-                onClick={handleDelete}
-                className="text-xs text-muted-foreground hover:text-destructive transition-colors font-mono"
+                onClick={() => setShowForm(false)}
+                className={cn(
+                  "px-3 py-1 text-xs font-medium tracking-tight transition-colors",
+                  "text-muted-foreground hover:text-foreground",
+                  "font-mono"
+                )}
               >
-                Delete
+                Cancel
               </button>
-            )}
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

@@ -58,3 +58,45 @@ CREATE TRIGGER update_project_ratings_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
+-- Create project_decisions table
+CREATE TABLE IF NOT EXISTS project_decisions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  project_slug TEXT UNIQUE NOT NULL,
+  decision_status TEXT NOT NULL CHECK (decision_status IN ('Explore', 'Advance', 'Park', 'Kill', 'Spin-Out Candidate')),
+  next_steps TEXT,
+  next_phase_budget NUMERIC,
+  updated_by TEXT NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create index for faster lookups
+CREATE INDEX IF NOT EXISTS idx_project_decisions_slug ON project_decisions(project_slug);
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE project_decisions ENABLE ROW LEVEL SECURITY;
+
+-- Create policy to allow all authenticated users to read decisions
+CREATE POLICY "Allow read access to all decisions"
+  ON project_decisions
+  FOR SELECT
+  USING (true);
+
+-- Create policy to allow users to insert decisions
+CREATE POLICY "Allow users to insert decisions"
+  ON project_decisions
+  FOR INSERT
+  WITH CHECK (true);
+
+-- Create policy to allow users to update decisions
+CREATE POLICY "Allow users to update decisions"
+  ON project_decisions
+  FOR UPDATE
+  USING (true)
+  WITH CHECK (true);
+
+-- Create trigger to automatically update updated_at
+CREATE TRIGGER update_project_decisions_updated_at
+  BEFORE UPDATE ON project_decisions
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+

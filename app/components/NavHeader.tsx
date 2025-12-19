@@ -41,7 +41,7 @@ export default function NavHeader() {
         <div className="flex items-center gap-4">
           {user && (
             <div className="text-xs font-mono text-muted-foreground">
-              {user.email}
+              {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()} dog
             </div>
           )}
           <DarkModeToggle />

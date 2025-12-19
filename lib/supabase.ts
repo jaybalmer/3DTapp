@@ -22,3 +22,13 @@ export interface ProjectRating {
   updated_at?: string
 }
 
+export interface ProjectDecision {
+  id?: string
+  project_slug: string
+  decision_status: string
+  next_steps: string | null
+  next_phase_budget: number | null
+  updated_by: string
+  updated_at?: string
+}
+
