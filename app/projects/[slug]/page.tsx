@@ -189,12 +189,13 @@ export default async function ProjectPage({
                     </div>
 
                     {previewable && (
-                      <div className="border border-border/20 rounded overflow-hidden">
+                      <div className="border border-border/20 rounded overflow-hidden bg-muted/10">
                         <iframe
-                          src={previewUrl}
+                          src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=0`}
                           className="w-full h-[300px] hidden md:block"
                           title={doc.label}
                           sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                          type="application/pdf"
                         />
                         <div className="md:hidden p-4 text-center space-y-3">
                           <p className="text-sm text-muted-foreground">

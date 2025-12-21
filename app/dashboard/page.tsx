@@ -19,44 +19,51 @@ const convictionConfig: Record<
     label: string
     description: string
     borderColor: string
+    colorModeBorderColor: string
   }
 > = {
   "A+": {
     label: "Highest Conviction",
     description: "Active development, strong market signals, proven team",
     borderColor: "border-l-border",
+    colorModeBorderColor: "rank-a-plus-border",
   },
   A: {
     label: "High Conviction",
     description: "Validated thesis, positive indicators, scaling phase",
     borderColor: "border-l-border/60",
+    colorModeBorderColor: "rank-a-border",
   },
   B: {
     label: "Emerging Conviction",
     description: "Early validation, monitoring metrics, potential upside",
     borderColor: "border-l-border/40",
+    colorModeBorderColor: "rank-b-border",
   },
   C: {
     label: "Exploratory",
     description: "Initial research, thesis formation, awaiting data",
     borderColor: "border-l-border/20",
+    colorModeBorderColor: "rank-c-border",
   },
   D: {
-  label: "Low Conviction",
-  description: "Weak signals, high uncertainty, parked for now",
-  borderColor: "border-l-muted-border/10",
-},
-E: {
-  label: "Very Low Conviction",
-  description: "Unclear thesis, minimal signal, likely discard",
-  borderColor: "border-l-border/5",
-},
-X: {
-  label: "Internal Capability",
-  description: "Exploring to develop capabilities, dogfood for internal projects",
-  borderColor: "border-l-destructive/40",
-},
-
+    label: "Low Conviction",
+    description: "Weak signals, high uncertainty, parked for now",
+    borderColor: "border-l-muted-border/10",
+    colorModeBorderColor: "rank-d-border",
+  },
+  E: {
+    label: "Very Low Conviction",
+    description: "Unclear thesis, minimal signal, likely discard",
+    borderColor: "border-l-border/5",
+    colorModeBorderColor: "rank-e-border",
+  },
+  X: {
+    label: "Internal Capability",
+    description: "Exploring to develop capabilities, dogfood for internal projects",
+    borderColor: "border-l-destructive/40",
+    colorModeBorderColor: "rank-x-border",
+  },
 }
 
 /* -----------------------------
@@ -99,9 +106,11 @@ function ConvictionSection({
             key={project.slug}
             href={`/projects/${project.slug}`}
             className={cn(
-              "block border border-border/20 bg-card p-4 space-y-3",
-              "border-l-4 cursor-pointer transition-colors hover:bg-muted/10",
-              config.borderColor
+              "block border border-border/20 p-4 space-y-3",
+              "border-l-4 cursor-pointer transition-colors",
+              "bg-card hover:bg-muted/10",
+              config.borderColor,
+              config.colorModeBorderColor
             )}
           >
               <div className="flex items-start justify-between gap-3">
@@ -186,7 +195,8 @@ function ConvictionSection({
                   className={cn(
                     "border-l border-border/40 transition-colors hover:bg-muted/20 cursor-pointer",
                     decisions[project.slug] && "border-b-0",
-                    config.borderColor
+                    config.borderColor,
+                    config.colorModeBorderColor
                   )}
                 >
                   <td className={cn("px-6 py-3", decisions[project.slug] && "border-b-0")}>
@@ -224,7 +234,8 @@ function ConvictionSection({
                 {decisions[project.slug] && (
                   <tr className={cn(
                     "border-l border-border/40 bg-muted/10 border-t-0",
-                    config.borderColor
+                    config.borderColor,
+                    config.colorModeBorderColor
                   )}>
                     <td className="px-6 pt-0 pb-3 border-t-0">
                       <div className="flex items-start gap-3">

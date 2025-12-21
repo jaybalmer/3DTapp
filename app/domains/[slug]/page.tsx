@@ -6,6 +6,7 @@ import Link from "next/link"
 import NavHeader from "@/app/components/NavHeader"
 import DomainRatings from "@/app/components/DomainRatings"
 import DomainDecision from "@/app/components/DomainDecision"
+import DomainPosts from "@/app/components/DomainPosts"
 import CopyLinkButton from "@/app/components/CopyLinkButton"
 import ScrollToSection from "@/app/components/ScrollToSection"
 import { Suspense } from "react"
@@ -298,6 +299,16 @@ export default function DomainPage({ params }: { params: Promise<{ slug: string 
               Decision
             </h2>
             <DomainDecision domainSlug={slug} />
+          </section>
+        )}
+
+        {/* Posts */}
+        {slug && (
+          <section className="space-y-4">
+            <h2 className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
+              Posts
+            </h2>
+            <DomainPosts domainSlug={slug} />
           </section>
         )}
 

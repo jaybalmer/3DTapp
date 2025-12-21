@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, ReactElement } from "react"
 import { getCurrentUser } from "@/lib/simpleAuth"
 import { cn } from "@/lib/utils"
+import LinkPreview from "./LinkPreview"
 import type { DomainDecision } from "@/lib/supabase"
 
 const DECISION_OPTIONS = [
@@ -162,6 +163,82 @@ export default function DomainDecision({ domainSlug }: DomainDecisionProps) {
     }
   }
 
+  // Extract all unique URLs from text
+  const extractUrls = (text: string): string[] => {
+    const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}[^\s]*)/g
+    const urls = new Set<string>()
+    let match
+
+    while ((match = urlPattern.exec(text)) !== null) {
+      let url = match[0]
+      // Add protocol if missing
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url
+      }
+      urls.add(url)
+    }
+
+    return Array.from(urls)
+  }
+
+  const linkifyText = (text: string): (string | ReactElement)[] => {
+    // URL pattern: matches http://, https://, or www. followed by domain and path
+    const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}[^\s]*)/g
+    
+    const parts: (string | ReactElement)[] = []
+    let lastIndex = 0
+    let match
+    let keyCounter = 0
+
+    while ((match = urlPattern.exec(text)) !== null) {
+      // Add text before the URL
+      if (match.index > lastIndex) {
+        parts.push(text.substring(lastIndex, match.index))
+      }
+
+      // Process the URL
+      let url = match[0]
+      let displayUrl = url
+
+      // Add protocol if missing
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url
+      }
+
+      // Truncate long URLs for display
+      if (displayUrl.length > 50) {
+        displayUrl = displayUrl.substring(0, 47) + '...'
+      }
+
+      // Add the link
+      parts.push(
+        <a
+          key={`link-${keyCounter++}`}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-foreground underline hover:text-muted-foreground transition-colors break-all"
+        >
+          {displayUrl}
+        </a>
+      )
+
+      lastIndex = match.index + match[0].length
+    }
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex))
+    }
+
+    // If no URLs found, return original text as single string
+    if (parts.length === 0) {
+      return [text]
+    }
+
+    return parts
+  }
+
   if (loading) {
     return (
       <section className="space-y-4">
@@ -208,13 +285,22 @@ export default function DomainDecision({ domainSlug }: DomainDecisionProps) {
           </div>
           
           {decision.next_steps && (
-            <div className="pt-2 border-t border-border/20">
+            <div className="pt-2 border-t border-border/20 space-y-2">
               <div className="text-xs font-mono uppercase tracking-wide text-muted-foreground mb-1">
                 Next Steps:
               </div>
-              <p className="text-sm leading-relaxed text-muted-foreground/90 whitespace-pre-line">
-                {decision.next_steps}
-              </p>
+              <div className="text-sm leading-relaxed text-muted-foreground/90 whitespace-pre-line">
+                {decision.next_steps.split('\n').map((line, lineIndex, lines) => (
+                  <span key={lineIndex}>
+                    {linkifyText(line)}
+                    {lineIndex < lines.length - 1 && <br />}
+                  </span>
+                ))}
+              </div>
+              {/* Link Previews */}
+              {extractUrls(decision.next_steps).map((url, index) => (
+                <LinkPreview key={`preview-${index}`} url={url} />
+              ))}
             </div>
           )}
           

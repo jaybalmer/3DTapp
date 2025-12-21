@@ -42,12 +42,128 @@
   --destructive-foreground: 210 40% 98%;
 }
 
+.color {
+  /* Core - vibrant purple background */
+  --background: 280 50% 95%;
+  --foreground: 280 60% 10%;
+
+  /* Surfaces - vibrant pink/red cards */
+  --card: 340 75% 90%;
+  --card-foreground: 280 60% 10%;
+
+  /* UI neutrals - vibrant blue/cyan muted areas */
+  --muted: 200 80% 85%;
+  --muted-foreground: 280 50% 30%;
+
+  /* Borders - vibrant purple borders */
+  --border: 280 70% 70%;
+
+  /* Optional */
+  --destructive: 0 80% 55%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* Ranking colors for borders */
+  --rank-a-plus: 120 70% 50%; /* Green */
+  --rank-a: 210 80% 55%; /* Blue */
+  --rank-b: 180 75% 50%; /* Cyan */
+  --rank-c: 50 90% 60%; /* Yellow */
+  --rank-d: 30 85% 55%; /* Orange */
+  --rank-e: 0 75% 55%; /* Red */
+  --rank-x: 280 60% 50%; /* Purple */
+}
+
+/* Light mode buttons - dark background with white text */
+:root:not(.dark):not(.color) button[class*="border"][class*="bg-card"] {
+  background-color: hsl(222.2 84% 4.9%) !important;
+  color: hsl(0 0% 100%) !important;
+  border-color: hsl(222.2 84% 4.9%) !important;
+}
+
+:root:not(.dark):not(.color) button[class*="border"][class*="bg-card"]:hover {
+  background-color: hsl(222.2 84% 8%) !important;
+  border-color: hsl(222.2 84% 8%) !important;
+}
+
+/* Dark mode buttons - light background with dark text */
+html.dark button[class*="border"][class*="bg-card"] {
+  background-color: hsl(210 40% 98%) !important;
+  color: hsl(222.2 84% 4.9%) !important;
+  border-color: hsl(210 40% 98%) !important;
+}
+
+html.dark button[class*="border"][class*="bg-card"]:hover {
+  background-color: hsl(210 40% 95%) !important;
+  border-color: hsl(210 40% 95%) !important;
+}
+
+/* Color mode button styles - make buttons pop with vibrant colors */
+.color button[class*="border"][class*="bg-card"],
+.color button[class*="border"][class*="bg-background"] {
+  border-color: hsl(280 70% 60%) !important;
+  background: linear-gradient(135deg, hsl(340 75% 88%), hsl(200 75% 85%)) !important;
+  transition: all 0.2s ease !important;
+}
+
+.color button[class*="border"][class*="bg-card"]:hover,
+.color button[class*="border"][class*="bg-background"]:hover,
+.color button[class*="hover:bg-muted"]:hover {
+  background: linear-gradient(135deg, hsl(340 80% 82%), hsl(200 80% 78%)) !important;
+  border-color: hsl(280 80% 55%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px hsla(280, 60%, 50%, 0.3);
+}
+
+.color button[class*="text-muted-foreground"]:hover {
+  color: hsl(280 60% 20%) !important;
+}
+
+/* Ranking border colors and backgrounds in color mode */
+.color .rank-a-plus-border {
+  border-left-color: hsl(var(--rank-a-plus)) !important;
+  background: linear-gradient(to right, hsl(120 70% 50% / 0.15), hsl(120 50% 95% / 0.3)) !important;
+}
+
+.color .rank-a-border {
+  border-left-color: hsl(var(--rank-a)) !important;
+  background: linear-gradient(to right, hsl(210 80% 55% / 0.15), hsl(210 50% 95% / 0.3)) !important;
+}
+
+.color .rank-b-border {
+  border-left-color: hsl(var(--rank-b)) !important;
+  background: linear-gradient(to right, hsl(180 75% 50% / 0.15), hsl(180 50% 95% / 0.3)) !important;
+}
+
+.color .rank-c-border {
+  border-left-color: hsl(var(--rank-c)) !important;
+  background: linear-gradient(to right, hsl(50 90% 60% / 0.15), hsl(50 70% 95% / 0.3)) !important;
+}
+
+.color .rank-d-border {
+  border-left-color: hsl(var(--rank-d)) !important;
+  background: linear-gradient(to right, hsl(30 85% 55% / 0.15), hsl(30 60% 95% / 0.3)) !important;
+}
+
+.color .rank-e-border {
+  border-left-color: hsl(var(--rank-e)) !important;
+  background: linear-gradient(to right, hsl(0 75% 55% / 0.15), hsl(0 50% 95% / 0.3)) !important;
+}
+
+.color .rank-x-border {
+  border-left-color: hsl(var(--rank-x)) !important;
+  background: linear-gradient(to right, hsl(280 60% 50% / 0.15), hsl(280 50% 95% / 0.3)) !important;
+}
+
+
 html {
   color-scheme: light;
 }
 
 html.dark {
   color-scheme: dark;
+}
+
+html.color {
+  color-scheme: light;
 }
 
 body {

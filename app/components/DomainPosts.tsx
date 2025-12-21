@@ -6,21 +6,21 @@ import { cn } from "@/lib/utils"
 import LinkPreview from "./LinkPreview"
 import PostComments from "./PostComments"
 
-interface ProjectPost {
+interface DomainPost {
   id: string
-  project_slug: string
+  domain_slug: string
   content: string
   posted_by: string
   posted_by_name: string
   created_at: string
 }
 
-interface ProjectPostsProps {
-  projectSlug: string
+interface DomainPostsProps {
+  domainSlug: string
 }
 
-export default function ProjectPosts({ projectSlug }: ProjectPostsProps) {
-  const [posts, setPosts] = useState<ProjectPost[]>([])
+export default function DomainPosts({ domainSlug }: DomainPostsProps) {
+  const [posts, setPosts] = useState<DomainPost[]>([])
   const [loading, setLoading] = useState(true)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editContent, setEditContent] = useState("")
@@ -32,11 +32,11 @@ export default function ProjectPosts({ projectSlug }: ProjectPostsProps) {
 
   useEffect(() => {
     loadPosts()
-  }, [projectSlug])
+  }, [domainSlug])
 
   const loadPosts = async () => {
     try {
-      const response = await fetch(`/api/projects/${projectSlug}/posts`)
+      const response = await fetch(`/api/domains/${domainSlug}/posts`)
       if (response.ok) {
         const data = await response.json()
         setPosts(data)
@@ -48,7 +48,7 @@ export default function ProjectPosts({ projectSlug }: ProjectPostsProps) {
     }
   }
 
-  const handleEdit = (post: ProjectPost) => {
+  const handleEdit = (post: DomainPost) => {
     setEditingId(post.id)
     setEditContent(post.content)
   }
@@ -64,7 +64,7 @@ export default function ProjectPosts({ projectSlug }: ProjectPostsProps) {
     }
 
     try {
-      const response = await fetch(`/api/projects/${projectSlug}/posts/${postId}`, {
+      const response = await fetch(`/api/domains/${domainSlug}/posts/${postId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export default function ProjectPosts({ projectSlug }: ProjectPostsProps) {
 
     setDeletingId(postId)
     try {
-      const response = await fetch(`/api/projects/${projectSlug}/posts/${postId}`, {
+      const response = await fetch(`/api/domains/${domainSlug}/posts/${postId}`, {
         method: "DELETE",
       })
 
@@ -126,7 +126,7 @@ export default function ProjectPosts({ projectSlug }: ProjectPostsProps) {
     setPostError("")
 
     try {
-      const response = await fetch(`/api/projects/${projectSlug}/posts`, {
+      const response = await fetch(`/api/domains/${domainSlug}/posts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -169,7 +169,7 @@ export default function ProjectPosts({ projectSlug }: ProjectPostsProps) {
     }).format(date)
   }
 
-  const canEditDelete = (post: ProjectPost) => {
+  const canEditDelete = (post: DomainPost) => {
     if (!user) return false
     return post.posted_by.toLowerCase() === user.email.toLowerCase()
   }
@@ -407,7 +407,7 @@ export default function ProjectPosts({ projectSlug }: ProjectPostsProps) {
               {/* Comments */}
               <PostComments
                 postId={post.id}
-                apiBasePath={`/api/projects/${projectSlug}/posts/${post.id}`}
+                apiBasePath={`/api/domains/${domainSlug}/posts/${post.id}`}
               />
             </div>
           )
