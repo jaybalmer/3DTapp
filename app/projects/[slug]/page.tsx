@@ -195,7 +195,6 @@ export default async function ProjectPage({
                           className="w-full h-[300px] hidden md:block"
                           title={doc.label}
                           sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                          type="application/pdf"
                         />
                         <div className="md:hidden p-4 text-center space-y-3">
                           <p className="text-sm text-muted-foreground">
